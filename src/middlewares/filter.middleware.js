@@ -12,6 +12,8 @@ export const filter = (req, res, next) => {
       queryObj[filterBy] = queryObj[filterBy] || {};
       queryObj[filterBy][`$${operator}`] = queryObj[key];
       delete queryObj[key];
+    } else if (!Number.isNaN(+queryObj[key])) {
+      queryObj[key] = { $eq: +queryObj[key] };
     } else {
       queryObj[key] = { $regex: queryObj[key], $options: "i" }; // make the filter case insensitive
     }
