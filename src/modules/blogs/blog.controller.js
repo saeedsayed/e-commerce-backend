@@ -21,11 +21,12 @@ export const getBlogs = async (req, res, next) => {
 // ========================== create a blog ==========================
 export const createBlog = async (req, res, next) => {
   try {
-    const { title, content, tags } = req.body;
+    const { title, content, tags, thumbnail } = req.body;
     const newBlog = new blog({
       title,
       content,
       tags,
+      thumbnail,
       author: req.userId,
     });
     await newBlog.populate("author", "fullName email");
