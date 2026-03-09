@@ -11,8 +11,9 @@ import Order from "./order.model.js";
 
 const router = Router();
 
-router.route("/history").get(checkToken, getUserOrdersController); // for testing purpose, to get the latest order of the user, in production we can have a separate route to get the latest order of the user, or we can have a route to get all the orders of the user with pagination
+router.route("/history").get(checkToken, getUserOrdersController);
 router.route("/history/:id").get(checkToken, getOrderByIdController);
+router.route("/user/:id").get(checkToken, restrictTo(roles.ADMIN), getUserOrdersController);
 router
   .route("/")
   .get(

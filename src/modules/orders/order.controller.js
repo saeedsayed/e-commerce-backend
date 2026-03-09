@@ -1,12 +1,11 @@
 import mongoose from "mongoose";
 import STATUS from "../../constants/httpStatus.constant.js";
-import user from "../users/user.model.js";
 import { getAllOrders, getOrderById, getUserOrders } from "./order.service.js";
 import appError from "../../utils/appError.js";
 
 export const getOrderByIdController = async (req, res) => {
   const orderId = req.params.id;
-  if(!mongoose.Types.ObjectId.isValid(orderId)){
+  if (!mongoose.Types.ObjectId.isValid(orderId)) {
     const err = appError.create("Invalid order ID", 400, STATUS.FAIL);
     throw err;
   }
@@ -19,7 +18,7 @@ export const getOrderByIdController = async (req, res) => {
 };
 
 export const getUserOrdersController = async (req, res) => {
-  const { userId } = req;
+  const userId = req.params?.id || req.userId;
   const orders = await getUserOrders(userId);
   res.json({
     status: STATUS.SUCCESS,
