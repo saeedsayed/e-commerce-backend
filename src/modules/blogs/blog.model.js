@@ -14,17 +14,16 @@ const blogSchema = new mongoose.Schema({
     required: true,
   },
   author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "user",
+    type: String,
     required: true,
   },
-    tags: [
+  tags: [
     {
       type: String,
       required: true,
     },
   ],
-    __v: {
+  __v: {
     type: Number,
     select: false,
   },
