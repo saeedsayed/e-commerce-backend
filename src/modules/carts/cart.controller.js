@@ -2,26 +2,14 @@ import { isValidObjectId } from "mongoose";
 import Cart from "./cart.model.js";
 import appError from "../../utils/appError.js";
 import STATUS from "../../constants/httpStatus.constant.js";
-import user from "../users/user.model.js";
+// import user from "../users/user.model.js";
 import calculateCartSubTotal from "../../utils/calculateCartSubTotal.js";
+import { getCart } from "./cart.service.js";
 
 // ===============================  Get Cart ============================================
-const getCart = async (req, res, next) => {
+const getCartController = async (req, res, next) => {
   try {
-    let cart = await Cart.findOne({ user: req.userId }).populate(
-      "products.product",
-    );
-    if (!cart) {
-      cart = new Cart({
-        user: req.userId,
-        products: [],
-        totalPrice: 0,
-      });
-      const userDocument = await user.findById(req.userId);
-      userDocument.cart = cart._id;
-      await cart.save();
-      await userDocument.save();
-    }
+    const cart = await getCart(req.userId);
     res.json({ status: STATUS.SUCCESS, data: cart });
   } catch (error) {
     next(error);
@@ -125,4 +113,4 @@ const clearCart = async (req, res, next) => {
   }
 };
 
-export { getCart, addToCart, removeFromCart, clearCart };
+export { getCartController, addToCart, removeFromCart, clearCart };

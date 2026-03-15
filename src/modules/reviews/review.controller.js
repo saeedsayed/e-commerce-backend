@@ -29,7 +29,6 @@ export const getProductReviewsController = async (req, res) => {
 };
 
 export const removeReviewController = async (req, res) => {
-  console.log("req.params", req.params);
   const { reviewId } = req.params;
   const { userId } = req;
   await removeReview(reviewId, userId);

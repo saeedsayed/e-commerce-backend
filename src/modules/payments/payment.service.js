@@ -2,6 +2,7 @@ import STATUS from "../../constants/httpStatus.constant.js";
 import appError from "../../utils/appError.js";
 import stripe from "../../utils/stripe.config.js";
 import Cart from "../carts/cart.model.js";
+import { getCart } from "../carts/cart.service.js";
 import { applyCoupon, checkCoupon } from "../coupons/coupon.service.js";
 import Order from "../orders/order.model.js";
 import product from "../products/product.model.js";
@@ -10,16 +11,17 @@ import user from "../users/user.model.js";
 
 export const createInvoice = async (userId, shippingMethodId, couponCode) => {
   // create a bill for the user based on their cart, shipping method and coupon
-  const { cart } = await user
-    .findById(userId)
-    .select("cart -_id")
-    .populate("cart", "totalPrice");
+  const cart = await getCart(userId);
   if (!cart) {
     const err = appError.create(
       "cart not found for this user",
       404,
       STATUS.FAIL,
     );
+    throw err;
+  }
+  if (!cart.products.length) {
+    const err = appError.create("the user cart is empty", 400, STATUS.FAIL);
     throw err;
   }
   const { cost: shippingCost } = await getShippingMethodById(shippingMethodId);
@@ -57,7 +59,6 @@ export const createPaymentIntent = async (totalAmount) => {
 };
 
 export const handleSuccessfulPayment = async (paymentIntentObject) => {
-  // console.log("paymentIntentObject", paymentIntentObject);
   // this function will be called after receiving the webhook event from stripe about successful payment, it will update the order status to paid and save the payment details in the order document
   const order = await Order.findOne({
     paymentIntentId: paymentIntentObject.id,
