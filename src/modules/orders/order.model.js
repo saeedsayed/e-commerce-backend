@@ -75,6 +75,7 @@ const orderSchema = new mongoose.Schema(
         "shipped",
         "delivered",
         "refunded",
+        "expired",
       ],
       default: "pending_payment",
     },

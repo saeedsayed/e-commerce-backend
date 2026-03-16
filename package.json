@@ -20,6 +20,7 @@
     "express-fileupload": "^1.5.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.15.1",
+    "node-cron": "^4.2.1",
     "nodemailer": "^7.0.10",
     "socket.io": "^4.8.1",
     "stripe": "^20.3.1",

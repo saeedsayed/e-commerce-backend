@@ -92,3 +92,16 @@ export const getAllOrders = async (paginate) => {
     .populate("user");
   return orders;
 };
+
+export const expirationIncompleteOrders = async () => {
+  const twentyMinutesAgo = new Date(Date.now() - 20 * 60 * 1000);
+  await Order.updateMany(
+    {
+      status: "pending_payment",
+      createdAt: { $lte: twentyMinutesAgo },
+    },
+    {
+      $set: { status: "expired" },
+    },
+  );
+};

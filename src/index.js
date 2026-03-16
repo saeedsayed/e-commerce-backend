@@ -8,15 +8,16 @@ import v1Routes from "./routes/v1.routes.js";
 import STATUS from "./constants/httpStatus.constant.js";
 // import stripe from "./utils/stripe.config.js";
 import webhookStripeRoute from "./modules/payments/payment.webhook.js";
+import { scheduledJobs } from "./utils/scheduledJobs.js";
 configDotenv();
 await connectDB();
-
+await scheduledJobs();
 const app = express();
 const port = process.env.PORT || 4000;
 const DEVELOP_MODE = process.env.NODE_ENV === "development";
 
 app.use(cors());
-app.use(webhookStripeRoute);// to handle stripe webhooks before body parsing middleware
+app.use(webhookStripeRoute); // to handle stripe webhooks before body parsing middleware
 app.use(express.json());
 app.use(CookieParser());
 app.use(
