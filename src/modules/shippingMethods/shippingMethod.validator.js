@@ -9,16 +9,17 @@ export const createShippingMethodSchema = Z.object({
     .optional(),
   cost: Z.number("cost is required and must be a number").min(
     0,
-    "cost must be a positive number"
+    "cost must be a positive number",
   ),
-  
+
   estimatedDeliveryDays: Z.number(
-    "estimatedDeliveryDays is required and must be a number"
+    "estimatedDeliveryDays is required and must be a number",
   ).min(1, "estimatedDeliveryDays must be at least 1"),
   regions: Z.array(Z.string("region is required and must be a string")).min(
     1,
-    "at least one region must be specified"
+    "at least one region must be specified",
   ),
+  isActive: Z.boolean("active state must be boolean").optional(),
 });
 export const updateShippingMethodSchema = Z.object({
   name: Z.string("name is required and must be a string")
@@ -32,7 +33,7 @@ export const updateShippingMethodSchema = Z.object({
     .min(0, "cost must be a positive number")
     .optional(),
   estimatedDeliveryDays: Z.number(
-    "estimatedDeliveryDays is required and must be a number"
+    "estimatedDeliveryDays is required and must be a number",
   )
     .min(1, "estimatedDeliveryDays must be at least 1")
     .optional(),

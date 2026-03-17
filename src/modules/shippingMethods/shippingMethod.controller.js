@@ -3,7 +3,11 @@ import ShippingMethods from "./shippingMethod.model.js";
 import appError from "../../utils/appError.js";
 
 export const getShippingMethods = async (req, res, next) => {
-  const shippingMethods = await ShippingMethods.find();
+  const filter = req.filter;
+  const shippingMethods = await ShippingMethods.find({
+    isActive: true,
+    ...filter,
+  });
   res.json({
     status: STATUS.SUCCESS,
     data: shippingMethods,
@@ -12,14 +16,21 @@ export const getShippingMethods = async (req, res, next) => {
 
 export const createShippingMethod = async (req, res, next) => {
   try {
-    const { name, description, cost, estimatedDeliveryDays, regions } =
-      req.body;
+    const {
+      name,
+      description,
+      cost,
+      estimatedDeliveryDays,
+      regions,
+      isActive = true,
+    } = req.body;
     const newShippingMethod = new ShippingMethods({
       name,
       description,
       cost,
       estimatedDeliveryDays,
       regions,
+      isActive,
     });
     await newShippingMethod.save();
     res.status(201).json({
@@ -39,7 +50,7 @@ export const getShippingMethodByIdController = async (req, res, next) => {
       const err = appError.create(
         "Shipping method not found",
         404,
-        STATUS.FAIL
+        STATUS.FAIL,
       );
       return next(err);
     }
@@ -54,8 +65,14 @@ export const getShippingMethodByIdController = async (req, res, next) => {
 export const updateShippingMethod = async (req, res, next) => {
   try {
     const shippingMethodId = req.params.id;
-    const { name, description, cost, estimatedDeliveryDays, regions } =
-      req.body;
+    const {
+      name,
+      description,
+      cost,
+      estimatedDeliveryDays,
+      regions,
+      isActive,
+    } = req.body;
     const updatedShippingMethod = await ShippingMethods.findByIdAndUpdate(
       shippingMethodId,
       {
@@ -64,14 +81,15 @@ export const updateShippingMethod = async (req, res, next) => {
         cost,
         estimatedDeliveryDays,
         regions,
+        isActive,
       },
-      { new: true }
+      { new: true },
     );
     if (!updatedShippingMethod) {
       const err = appError.create(
         "Shipping method not found",
         404,
-        STATUS.NOT_FOUND
+        STATUS.NOT_FOUND,
       );
       return next(err);
     }
@@ -87,14 +105,13 @@ export const updateShippingMethod = async (req, res, next) => {
 export const deleteShippingMethod = async (req, res, next) => {
   try {
     const shippingMethodId = req.params.id;
-    const deletedShippingMethod = await ShippingMethods.findByIdAndDelete(
-      shippingMethodId
-    );
+    const deletedShippingMethod =
+      await ShippingMethods.findByIdAndDelete(shippingMethodId);
     if (!deletedShippingMethod) {
       const err = appError.create(
         "Shipping method not found",
         404,
-        STATUS.NOT_FOUND
+        STATUS.NOT_FOUND,
       );
       return next(err);
     }
