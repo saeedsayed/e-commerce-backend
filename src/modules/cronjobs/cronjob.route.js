@@ -5,7 +5,7 @@ const router = Router();
 
 router.route("/expirationIncompleteOrders").get((req, res) => {
   expirationIncompleteOrders();
-  res.status(200);
+  res.status(200).end();
 });
 
 export default router;
