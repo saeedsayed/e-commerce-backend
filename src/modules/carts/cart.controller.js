@@ -4,7 +4,7 @@ import appError from "../../utils/appError.js";
 import STATUS from "../../constants/httpStatus.constant.js";
 // import user from "../users/user.model.js";
 import calculateCartSubTotal from "../../utils/calculateCartSubTotal.js";
-import { getCart } from "./cart.service.js";
+import { clearCart, getCart } from "./cart.service.js";
 
 // ===============================  Get Cart ============================================
 const getCartController = async (req, res, next) => {
@@ -93,16 +93,9 @@ const removeFromCart = async (req, res, next) => {
   }
 };
 // =============================  Clear Cart ===========================================
-const clearCart = async (req, res, next) => {
+const clearCartController = async (req, res, next) => {
   try {
-    const cart = await Cart.findOne({ user: req.userId });
-    if (!cart) {
-      const err = appError.create("Cart not found", 404, STATUS.FAIL);
-      return next(err);
-    }
-    cart.products = [];
-    cart.totalPrice = 0;
-    await cart.save();
+    const cart = await clearCart(req.userId);
     res.json({
       status: STATUS.SUCCESS,
       data: cart,
@@ -113,4 +106,4 @@ const clearCart = async (req, res, next) => {
   }
 };
 
-export { getCartController, addToCart, removeFromCart, clearCart };
+export { getCartController, addToCart, removeFromCart, clearCartController };

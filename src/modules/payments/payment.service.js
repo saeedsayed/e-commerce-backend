@@ -1,13 +1,14 @@
 import STATUS from "../../constants/httpStatus.constant.js";
 import appError from "../../utils/appError.js";
 import stripe from "../../utils/stripe.config.js";
-import Cart from "../carts/cart.model.js";
-import { getCart } from "../carts/cart.service.js";
+// import Cart from "../carts/cart.model.js";
+import { clearCart, getCart } from "../carts/cart.service.js";
+import coupon from "../coupons/coupon.model.js";
 import { applyCoupon, checkCoupon } from "../coupons/coupon.service.js";
 import Order from "../orders/order.model.js";
 import product from "../products/product.model.js";
 import { getShippingMethodById } from "../shippingMethods/shippingMethod.service.js";
-import user from "../users/user.model.js";
+// import user from "../users/user.model.js";
 
 export const createInvoice = async (userId, shippingMethodId, couponCode) => {
   // create a bill for the user based on their cart, shipping method and coupon
@@ -84,17 +85,10 @@ export const handleSuccessfulPayment = async (paymentIntentObject) => {
     method: paymentIntentObject?.payment_method_types[0],
   };
   await order.save();
-  await Cart.findOneAndUpdate(
-    // after placing the order and successful payment, clear the user's cart
-    { user: order.user._id },
-    {
-      $set: {
-        products: [],
-        totalPrice: 0,
-      },
-    },
-    { new: true },
-  );
+  // Increment the coupon used count
+  if (!!order.coupon)
+    await coupon.findByIdAndUpdate(order.coupon, { $inc: { usedCount: 1 } });
+  await clearCart(order.user?._id);
   await Promise.all(
     // update the stock for each product in the order
     order.items.map(async (item) => {

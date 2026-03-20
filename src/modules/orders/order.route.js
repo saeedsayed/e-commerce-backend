@@ -13,7 +13,9 @@ const router = Router();
 
 router.route("/history").get(checkToken, getUserOrdersController);
 router.route("/history/:id").get(checkToken, getOrderByIdController);
-router.route("/user/:id").get(checkToken, restrictTo(roles.ADMIN), getUserOrdersController);
+router
+  .route("/user/:id")
+  .get(checkToken, restrictTo(roles.ADMIN), getUserOrdersController);
 router
   .route("/")
   .get(

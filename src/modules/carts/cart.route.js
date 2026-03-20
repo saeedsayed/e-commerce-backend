@@ -1,7 +1,7 @@
 import express from "express";
 import {
   addToCart,
-  clearCart,
+  clearCartController,
   getCartController,
   removeFromCart,
 } from "./cart.controller.js";
@@ -13,5 +13,5 @@ router
   .post(checkToken, addToCart)
   .delete(checkToken, removeFromCart);
 
-router.route("/clear").delete(checkToken, clearCart);
+router.route("/clear").delete(checkToken, clearCartController);
 export default router;
