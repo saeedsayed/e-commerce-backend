@@ -51,7 +51,7 @@ const getSingleProduct = async (req, res, next) => {
 // ====================================================================
 const createProduct = async (req, res, next) => {
   const productData = req.body;
-  productData?.versions?.forEach(v => {
+    productData?.versions?.forEach((v) => {
     if (!isValidObjectId(v.version)) {
       const err = appError.create("invalid version id", 400, STATUS.FAIL);
       return next(err);
@@ -59,7 +59,7 @@ const createProduct = async (req, res, next) => {
   });
   const newProduct = new product(productData);
   await newProduct.save();
-  res.send({
+  res.status(201).json({
     status: STATUS.SUCCESS,
     data: newProduct,
     message: "product created successfully",

@@ -10,15 +10,17 @@ export const productSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    cost: {
+      type: Number,
+      required: true,
+    },
     description: {
       type: String,
       required: true,
     },
     thumbnail: {
       type: String,
-      required:true,
-      default:
-        "https://cane-line.eu/cdn/shop/files/50804T_P144COB_3492_1512x.png?v=1755173957",
+      required: true,
     },
     category: {
       type: [String],
@@ -38,6 +40,61 @@ export const productSchema = new mongoose.Schema(
       type: Number,
       required: true,
       default: 0,
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    colors: {
+      type: [
+        {
+          colorName: String,
+          colorCode: String,
+          images: [String],
+        },
+      ],
+      default: [],
+    },
+    sizes: {
+      type: [
+        {
+          type: String,
+          enum: ["XS", "S", "M", "L", "XL", "XXL"],
+        },
+      ],
+      default: [],
+    },
+    weight: {
+      type: {
+        value: Number,
+        uint: {
+          type: String,
+          enum: ["MG", "G", "KG"],
+        },
+      },
+      default: null,
+    },
+    dimensions: {
+      length: {
+        type: Number,
+        enum: ["MM", "CM", "M"],
+        default: null,
+      },
+      width: {
+        type: Number,
+        enum: ["MM", "CM", "M"],
+        default: null,
+      },
+      height: {
+        type: Number,
+        enum: ["MM", "CM", "M"],
+        default: null,
+      },
+      depth: {
+        type: Number,
+        enum: ["MM", "CM", "M"],
+        default: null,
+      },
     },
     versions: {
       type: [
@@ -64,7 +121,7 @@ export const productSchema = new mongoose.Schema(
       select: false,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const product = mongoose.model("product", productSchema);
