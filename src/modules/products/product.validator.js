@@ -1,5 +1,14 @@
 import { z as Z } from "zod";
 
+const sizeEnum = ["XS", "S", "M", "L", "XL", "XXL"];
+const weightUnitEnum = ["MG", "G", "KG"];
+const dimensionUnitEnum = ["MM", "CM", "M"];
+
+const dimensionValueSchema = Z.object({
+  value: Z.number("dimension value must be a number"),
+  uint: Z.enum(dimensionUnitEnum, "dimension unit must be one of MM, CM, M"),
+});
+
 export const createProductSchema = Z.object({
   title: Z.string("title is required")
     .min(2, "title must be at least 2 characters")
@@ -24,7 +33,7 @@ export const createProductSchema = Z.object({
     .min(0, "discount must be at least 0")
     .optional(),
   isActive: Z.boolean("isActive must be a boolean").optional(),
-  images: Z.optional(Z.array(Z.string().url("each image must be a valid URL"))),
+  images: Z.optional(Z.array(Z.string("each image must be a string"))),
   colors: Z.optional(
     Z.array(
       Z.object({
@@ -36,18 +45,18 @@ export const createProductSchema = Z.object({
       }),
     ),
   ),
-  sizes: Z.optional(Z.array(Z.enum(["XS", "S", "M", "L", "XL", "XXL"]))),
+  sizes: Z.optional(Z.array(Z.enum(sizeEnum))),
   weight: Z.object({
     value: Z.number("weight value must be a number"),
-    uint: Z.enum(["MG", "G", "KG"], "weight unit must be one of MG, G, KG"),
+    uint: Z.enum(weightUnitEnum, "weight unit must be one of MG, G, KG"),
   })
     .nullable()
     .optional(),
   dimensions: Z.object({
-    length: Z.number("length must be a number").nullable().optional(),
-    width: Z.number("width must be a number").nullable().optional(),
-    height: Z.number("height must be a number").nullable().optional(),
-    depth: Z.number("depth must be a number").nullable().optional(),
+    length: dimensionValueSchema.nullable().optional(),
+    width: dimensionValueSchema.nullable().optional(),
+    height: dimensionValueSchema.nullable().optional(),
+    depth: dimensionValueSchema.nullable().optional(),
   }).optional(),
   versions: Z.optional(
     Z.array(
@@ -57,4 +66,20 @@ export const createProductSchema = Z.object({
       }),
     ),
   ),
-});
+  rating: Z.number("rating must be a number between 0 and 5")
+    .min(0, "rating must be at least 0")
+    .max(5, "rating must be at most 5")
+    .optional(),
+  reviewsCount: Z.number("reviewsCount must be a non-negative number")
+    .min(0, "reviewsCount must be at least 0")
+    .optional(),
+}).refine(
+  (data) => {
+    console.log("data.price > data.cost", data.price > data.cost);
+    return data.price > data.cost;
+  },
+  {
+    message: "price must be greater than cost",
+    path: ["price"],
+  },
+);

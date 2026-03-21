@@ -76,23 +76,31 @@ export const productSchema = new mongoose.Schema(
     },
     dimensions: {
       length: {
-        type: Number,
-        enum: ["MM", "CM", "M"],
+        type: {
+          value: { type: Number },
+          uint: { type: String, enum: ["MM", "CM", "M"] },
+        },
         default: null,
       },
       width: {
-        type: Number,
-        enum: ["MM", "CM", "M"],
+        type: {
+          value: { type: Number },
+          uint: { type: String, enum: ["MM", "CM", "M"] },
+        },
         default: null,
       },
       height: {
-        type: Number,
-        enum: ["MM", "CM", "M"],
+        type: {
+          value: { type: Number },
+          uint: { type: String, enum: ["MM", "CM", "M"] },
+        },
         default: null,
       },
       depth: {
-        type: Number,
-        enum: ["MM", "CM", "M"],
+        type: {
+          value: { type: Number },
+          uint: { type: String, enum: ["MM", "CM", "M"] },
+        },
         default: null,
       },
     },
