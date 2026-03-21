@@ -72,7 +72,7 @@ export const getUserOrders = async (userId) => {
   return orders;
 };
 
-export const getAllOrders = async (paginate) => {
+export const getAllOrders = async (filter, paginate) => {
   const {
     limit,
     skip,
@@ -82,7 +82,7 @@ export const getAllOrders = async (paginate) => {
     // previousPage,
     // totalDocuments,
   } = paginate;
-  const orders = await Order.find()
+  const orders = await Order.find(filter)
     .limit(limit)
     .skip(skip)
     .sort({ createdAt: -1 })

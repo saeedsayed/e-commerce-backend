@@ -27,8 +27,8 @@ export const getUserOrdersController = async (req, res) => {
 };
 
 export const getAllOrdersController = async (req, res) => {
-  const { pagination } = req;
-  const orders = await getAllOrders(pagination);
+  const { pagination, filter } = req;
+  const orders = await getAllOrders(filter, pagination);
   res.json({
     status: STATUS.SUCCESS,
     data: orders,

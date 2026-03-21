@@ -6,10 +6,8 @@ import STATUS from "../../constants/httpStatus.constant.js";
 // ========================== get all blogs ==========================
 export const getBlogs = async (req, res, next) => {
   try {
-    const blogs = await blog
-      .find({})
-      .sort({ createdAt: -1 })
-      .populate("author", "fullName email");
+    const { filter } = req;
+    const blogs = await blog.find(filter).sort({ createdAt: -1 });
     res.json({
       status: STATUS.SUCCESS,
       data: blogs,

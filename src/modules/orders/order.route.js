@@ -8,6 +8,7 @@ import {
 import roles from "../../constants/roles.constant.js";
 import { paginate } from "../../middlewares/pagination.middleware.js";
 import Order from "./order.model.js";
+import { filter } from "../../middlewares/filter.middleware.js";
 
 const router = Router();
 
@@ -21,6 +22,7 @@ router
   .get(
     checkToken,
     restrictTo(roles.ADMIN),
+    filter,
     paginate(Order),
     getAllOrdersController,
   );

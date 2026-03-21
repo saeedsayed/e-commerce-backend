@@ -10,10 +10,11 @@ import { checkToken, restrictTo } from "../../middlewares/auth.middleware.js";
 import roles from "../../constants/roles.constant.js";
 import { validate } from "../../middlewares/validate.middleware.js";
 import blogSchema from "./blog.validator.js";
+import { filter } from "../../middlewares/filter.middleware.js";
 const router = express.Router();
 router
   .route("/")
-  .get(getBlogs)
+  .get(filter, getBlogs)
   .post(checkToken, restrictTo(roles.ADMIN), validate(blogSchema), createBlog);
 router
   .route("/:id")

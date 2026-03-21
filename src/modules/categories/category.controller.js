@@ -5,7 +5,8 @@ import category from "./category.model.js";
 
 // ===================================================================
 const getCategories = async (req, res) => {
-  const categories = await category.find();
+  const { filter } = req;
+  const categories = await category.find(filter);
   const categoriesLength = await category.find().countDocuments();
   res.send({
     status: STATUS.SUCCESS,
