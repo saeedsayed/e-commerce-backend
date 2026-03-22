@@ -4,10 +4,7 @@ import appError from "../../utils/appError.js";
 
 export const getShippingMethods = async (req, res, next) => {
   const filter = req.filter;
-  const shippingMethods = await ShippingMethods.find({
-    isActive: true,
-    ...filter,
-  });
+  const shippingMethods = await ShippingMethods.find(filter);
   res.json({
     status: STATUS.SUCCESS,
     data: shippingMethods,

@@ -6,7 +6,7 @@ const dimensionUnitEnum = ["MM", "CM", "M"];
 
 const dimensionValueSchema = Z.object({
   value: Z.number("dimension value must be a number"),
-  uint: Z.enum(dimensionUnitEnum, "dimension unit must be one of MM, CM, M"),
+  unit: Z.enum(dimensionUnitEnum, "dimension unit must be one of MM, CM, M"),
 });
 
 export const createProductSchema = Z.object({
@@ -48,7 +48,7 @@ export const createProductSchema = Z.object({
   sizes: Z.optional(Z.array(Z.enum(sizeEnum))),
   weight: Z.object({
     value: Z.number("weight value must be a number"),
-    uint: Z.enum(weightUnitEnum, "weight unit must be one of MG, G, KG"),
+    unit: Z.enum(weightUnitEnum, "weight unit must be one of MG, G, KG"),
   })
     .nullable()
     .optional(),
@@ -73,13 +73,7 @@ export const createProductSchema = Z.object({
   reviewsCount: Z.number("reviewsCount must be a non-negative number")
     .min(0, "reviewsCount must be at least 0")
     .optional(),
-}).refine(
-  (data) => {
-    console.log("data.price > data.cost", data.price > data.cost);
-    return data.price > data.cost;
-  },
-  {
-    message: "price must be greater than cost",
-    path: ["price"],
-  },
-);
+}).refine((data) => data.price > data.cost, {
+  message: "price must be greater than cost",
+  path: ["price"],
+});

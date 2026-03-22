@@ -2,6 +2,7 @@ export const filter = (req, res, next) => {
   const queryObj = { ...req.query };
   const excludeFields = ["page", "sort", "limit", "fields"]; //exclude the pagination and sort query fields
   excludeFields.forEach((field) => delete queryObj[field]);
+  if (!("isActive" in queryObj)) queryObj.isActive = { $in: [true, null] };
   //   ==============================================================
   //   handle a dynamic range filter like price age or any ranged fields
   Object.keys(queryObj).forEach((key) => {
@@ -15,11 +16,12 @@ export const filter = (req, res, next) => {
     } else if (!Number.isNaN(+queryObj[key])) {
       queryObj[key] = { $eq: +queryObj[key] };
     } else if (key === "isActive" && queryObj[key] === "all") {
-      queryObj[key] = { $in: [true, false] };
+      queryObj[key] = { $in: [true, false, null] };
     } else if (
       queryObj[key] === "false" ||
       queryObj[key] === "true" ||
-      key === "_id"
+      key === "_id" ||
+      key === "isActive"
     ) {
       queryObj[key] = queryObj[key];
     } else {

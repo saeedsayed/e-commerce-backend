@@ -67,10 +67,11 @@ export const productSchema = new mongoose.Schema(
     weight: {
       type: {
         value: Number,
-        uint: {
+        unit: {
           type: String,
           enum: ["MG", "G", "KG"],
         },
+        _id: false,
       },
       default: null,
     },
@@ -78,28 +79,32 @@ export const productSchema = new mongoose.Schema(
       length: {
         type: {
           value: { type: Number },
-          uint: { type: String, enum: ["MM", "CM", "M"] },
+          unit: { type: String, enum: ["MM", "CM", "M"] },
+          _id: false,
         },
         default: null,
       },
       width: {
         type: {
           value: { type: Number },
-          uint: { type: String, enum: ["MM", "CM", "M"] },
+          unit: { type: String, enum: ["MM", "CM", "M"] },
+          _id: false,
         },
         default: null,
       },
       height: {
         type: {
           value: { type: Number },
-          uint: { type: String, enum: ["MM", "CM", "M"] },
+          unit: { type: String, enum: ["MM", "CM", "M"] },
+          _id: false,
         },
         default: null,
       },
       depth: {
         type: {
           value: { type: Number },
-          uint: { type: String, enum: ["MM", "CM", "M"] },
+          unit: { type: String, enum: ["MM", "CM", "M"] },
+          _id: false,
         },
         default: null,
       },

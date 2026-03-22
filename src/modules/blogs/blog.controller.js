@@ -6,11 +6,20 @@ import STATUS from "../../constants/httpStatus.constant.js";
 // ========================== get all blogs ==========================
 export const getBlogs = async (req, res, next) => {
   try {
-    const { filter } = req;
-    const blogs = await blog.find(filter).sort({ createdAt: -1 });
+    const {
+      filter,
+      pagination: { totalDocuments, ...pagination },
+    } = req;
+    const blogs = await blog
+      .find(filter)
+      .skip(pagination.skip)
+      .limit(pagination.limit)
+      .sort({ createdAt: -1 });
     res.json({
       status: STATUS.SUCCESS,
       data: blogs,
+      results: totalDocuments,
+      paginate: pagination,
     });
   } catch (error) {
     next(error);
