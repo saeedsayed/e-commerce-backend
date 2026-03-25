@@ -14,6 +14,7 @@ import reviewRoute from "../modules/reviews/review.route.js";
 import paymentRoute from "../modules/payments/payment.route.js";
 import orderRouter from "../modules/orders/order.route.js";
 import addressesRoute from "../modules/addresses/address.route.js";
+import analyses from "../modules/analyses/analysis.route.js";
 import cronjobRoute from "../modules/cronjobs/cronjob.route.js";
 
 export default (app) => {
@@ -32,5 +33,6 @@ export default (app) => {
   app.use("/api/v1/payment", paymentRoute);
   app.use("/api/v1/addresses", addressesRoute);
   app.use("/api/v1/orders", orderRouter);
+  app.use("/api/v1/analyses", analyses);
   app.use("/api/v1/cronjob", cronjobRoute);
 };

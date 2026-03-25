@@ -30,7 +30,7 @@ export const checkToken = async (req, res, next) => {
 export const restrictTo = (...roles) => {
   return async (req, res, next) => {
     const requestedUser = await user.findById(req.userId);
-    if (!roles.includes(requestedUser.role)) {
+    if (!roles.includes(requestedUser?.role)) {
       const err = appError.create(
         "Forbidden - You don't have permission",
         403,
