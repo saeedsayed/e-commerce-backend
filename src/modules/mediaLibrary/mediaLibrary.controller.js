@@ -19,18 +19,14 @@ const getMediaLibrary = async (req, res, next) => {
   );
   res.status(200).json({
     status: "success",
-    data: {
-      mediaLibrary,
-    },
+    data: mediaLibrary,
   });
 };
 const getFolders = async (req, res, next) => {
   const { folders: rootFolders } = await cloudinary.api.root_folders();
   res.status(200).json({
     status: "success",
-    data: {
-      rootFolders,
-    },
+    data: rootFolders.filter((folder) => folder.name !== "profile_pictures"),
   });
 };
 const getFolder = async (req, res, next) => {
