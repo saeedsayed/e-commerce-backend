@@ -1,6 +1,26 @@
 import Order from "../orders/order.model.js";
 import user from "../users/user.model.js";
 
+export const averageOrderValue = async () =>
+  await Order.aggregate([
+    { $match: { status: "paid" } },
+
+    {
+      $group: {
+        _id: null,
+        totalRevenue: { $sum: "$pricing.total" },
+        totalOrders: { $sum: 1 },
+      },
+    },
+
+    {
+      $project: {
+        _id: 0,
+        AOV: { $divide: ["$totalRevenue", "$totalOrders"] },
+      },
+    },
+  ]);
+
 export const dailySales = async () =>
   await Order.aggregate([
     { $match: { status: "paid" } },
@@ -95,8 +115,10 @@ export const topProducts = async () =>
     {
       $project: {
         _id: 0,
+        productId: "$_id",
         name: "$product.title",
         unitsSold: 1,
+        thumbnail: "$product.thumbnail",
         revenue: {
           $multiply: ["$product.price", "$unitsSold"],
         },
@@ -114,4 +136,6 @@ export const newCustomersCount = async (lastDaysCount = 1) => {
     .countDocuments();
 };
 
-export const allCustomersCount = async () => await user.find().countDocuments();
+export const CustomersCount = async () => await user.find().countDocuments();
+
+export const OrdersCount = async () => await Order.find().countDocuments();

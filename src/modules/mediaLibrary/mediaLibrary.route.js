@@ -21,13 +21,13 @@ router
   .post(checkToken, restrictTo(roles.ADMIN), createFolder);
 
 router
-  .route("/folders/:folderId")
+  .route("/folders/:folderName")
   .get(checkToken, restrictTo(roles.ADMIN), getFolder)
   // .put(checkToken, restrictTo(roles.ADMIN), updateFolder)
   .delete(checkToken, restrictTo(roles.ADMIN), deleteFolder);
 
 router
-  .route("/folders/:folderId/files")
+  .route("/folders/:folderName/files")
   .post(checkToken, restrictTo(roles.ADMIN), uploadFiles)
   .delete(checkToken, restrictTo(roles.ADMIN), deleteFiles);
 

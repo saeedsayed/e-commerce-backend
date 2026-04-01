@@ -2,8 +2,10 @@ import { Router } from "express";
 import { checkToken, restrictTo } from "../../middlewares/auth.middleware.js";
 import roles from "../../constants/roles.constant.js";
 import {
-  allCustomersController,
+  averageOrderValueController,
+  customersCountController,
   newCustomersController,
+  ordersCountController,
   sales,
   topProductsController,
   totalRevenueController,
@@ -22,7 +24,13 @@ router
   .route("/new-customers")
   .get(checkToken, restrictTo(roles.ADMIN), newCustomersController);
 router
-  .route("/all-customers")
-  .get(checkToken, restrictTo(roles.ADMIN), allCustomersController);
+  .route("/aov")
+  .get(checkToken, restrictTo(roles.ADMIN), averageOrderValueController);
+router
+  .route("/customers-count")
+  .get(checkToken, restrictTo(roles.ADMIN), customersCountController);
+router
+  .route("/orders-count")
+  .get(checkToken, restrictTo(roles.ADMIN), ordersCountController);
 
 export default router;

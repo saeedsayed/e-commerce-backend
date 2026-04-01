@@ -1,13 +1,23 @@
 import STATUS from "../../constants/httpStatus.constant.js";
 import {
-  allCustomersCount,
+  averageOrderValue,
+  CustomersCount,
   dailySales,
   monthlySales,
   newCustomersCount,
+  OrdersCount,
   topProducts,
   totalRevenue,
   yearlySales,
 } from "./analysis.service.js";
+
+export const averageOrderValueController = async (req, res) => {
+  const aov = await averageOrderValue();
+  res.json({
+    status: STATUS.SUCCESS,
+    data: { AOV: +aov[0].AOV.toFixed(2) },
+  });
+};
 
 export const sales = async (req, res) => {
   const duration = req.query.duration || "daily";
@@ -34,7 +44,7 @@ export const totalRevenueController = async (req, res) => {
   const r = await totalRevenue();
   res.json({
     status: STATUS.SUCCESS,
-    data: r,
+    data: {totalRevenue:r[0].revenue},
   });
 };
 
@@ -54,8 +64,15 @@ export const newCustomersController = async (req, res) => {
     data: NC,
   });
 };
-export const allCustomersController = async (req, res) => {
-  const customerCount = await allCustomersCount();
+export const customersCountController = async (req, res) => {
+  const customerCount = await CustomersCount();
+  res.json({
+    status: STATUS.SUCCESS,
+    data: customerCount,
+  });
+};
+export const ordersCountController = async (req, res) => {
+  const customerCount = await OrdersCount();
   res.json({
     status: STATUS.SUCCESS,
     data: customerCount,

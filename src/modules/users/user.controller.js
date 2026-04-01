@@ -1,4 +1,3 @@
-import MediaLibrary from "../mediaLibrary/mediaLibrary.model.js";
 import user from "./user.model.js";
 import appError from "../../utils/appError.js";
 import { clearTempFile } from "../../utils/clearTempFile.js";
@@ -18,44 +17,23 @@ export const updateProfilePicture = async (req, res, next) => {
     const err = appError.create(
       "Profile picture is required",
       400,
-      STATUS.FAIL
+      STATUS.FAIL,
     );
     return next(err);
   }
   // upload to cloudinary and save to media library on db
-  const mediaLibrary = await MediaLibrary.findOne(
-    {
-      folderTitle: "profile_pictures",
-    }
-  );
   await cloudinary.uploader.destroy("profile_pictures/" + userId); // delete previous picture
   const pictureUrl = await cloudinary.uploader.upload(
     profilePicture.tempFilePath,
-    { folder: "profile_pictures", public_id: userId }
+    { folder: "profile_pictures", public_id: userId },
   );
-  // save to media library
-  if (!mediaLibrary) {
-    // create new media library if not exists
-    const newMediaLibrary = new MediaLibrary({
-      folderTitle: "profile_pictures",
-      files: [{ fileUrl: pictureUrl.secure_url }],
-    });
-    await newMediaLibrary.save();
-  } else {
-    // update existing media library
-    mediaLibrary.files = mediaLibrary.files.filter(
-      (file) => file.fileUrl.split("/").pop().split(".")[0] !== userId
-    );
-    mediaLibrary.files.push({ fileUrl: pictureUrl.secure_url, publicId: pictureUrl.public_id });
-    await mediaLibrary.save();
-  }
   // clean temp file
   clearTempFile(profilePicture.tempFilePath);
   // update user profile picture
   const updatedUser = await user.findByIdAndUpdate(
     userId,
     { avatar: pictureUrl.secure_url },
-    { new: true }
+    { new: true },
   );
   if (!updatedUser) {
     const err = appError.create("User not found", 404, STATUS.FAIL);

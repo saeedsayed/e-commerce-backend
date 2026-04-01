@@ -2,11 +2,17 @@ export const paginate = (model) => async (req, res, next) => {
   try {
     const { page, limit } = req.query;
     const { filter } = req;
-    const pageNumber = parseInt(page) || 1;
+    const totalDocuments = await model.countDocuments(
+      typeof filter === "object" && filter,
+    );
+    let pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 10;
-    const skip = (pageNumber - 1) * limitNumber;
-    const totalDocuments = await model.countDocuments(typeof filter ==="object"&&filter);
+    let skip = (pageNumber - 1) * limitNumber;
     const totalPages = Math.ceil(totalDocuments / limitNumber);
+    if (skip >= totalDocuments) {
+      pageNumber = totalPages;
+      skip = (pageNumber - 1) * limitNumber;
+    }
     req.pagination = {
       limit: limitNumber,
       skip,
