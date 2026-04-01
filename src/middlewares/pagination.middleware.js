@@ -5,9 +5,7 @@ export const paginate = (model) => async (req, res, next) => {
     const totalDocuments = await model.countDocuments(
       typeof filter === "object" && filter,
     );
-    console.log("totalDocuments", totalDocuments);
     let pageNumber = parseInt(page) || 1;
-    console.log("pageNumber", pageNumber);
     const limitNumber = parseInt(limit) || 10;
     let skip = (pageNumber - 1) * limitNumber;
     const totalPages = Math.ceil(totalDocuments / limitNumber);

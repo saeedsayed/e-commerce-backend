@@ -15,7 +15,7 @@ export const averageOrderValueController = async (req, res) => {
   const aov = await averageOrderValue();
   res.json({
     status: STATUS.SUCCESS,
-    data: { AOV: +aov[0].AOV.toFixed(2) },
+    data: { AOV: +aov[0]?.AOV.toFixed(2) || 0 },
   });
 };
 
@@ -44,7 +44,7 @@ export const totalRevenueController = async (req, res) => {
   const r = await totalRevenue();
   res.json({
     status: STATUS.SUCCESS,
-    data: {totalRevenue:r[0].revenue},
+    data: {totalRevenue:r[0]?.revenue || 0},
   });
 };
 
