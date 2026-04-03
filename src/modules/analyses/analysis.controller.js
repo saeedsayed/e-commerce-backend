@@ -44,7 +44,7 @@ export const totalRevenueController = async (req, res) => {
   const r = await totalRevenue();
   res.json({
     status: STATUS.SUCCESS,
-    data: {totalRevenue:r[0]?.revenue || 0},
+    data: { totalRevenue: +r[0]?.totalRevenue.toFixed(2) || 0 },
   });
 };
 
